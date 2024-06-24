@@ -1,7 +1,11 @@
 //C语言题解
 //应该是个基础题解，算法设计的有点拉跨
+#define _CRT_SECURE_NO_WARNINGS 1
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int flag = 0;
+int flag = 0;   //进位标志
 
 //Definition for singly-linked list.
 struct ListNode {
@@ -25,23 +29,23 @@ struct ListNode* getnode(int val)
 struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
     int sum = 0;
     struct ListNode* l3 = getnode(0);
-    struct ListNode* result = l3;
+    struct ListNode* result = l3;       //作为最终用来返回的载体
     while (l1 && l2)
     {
-        sum = l1->val + l2->val + flag;
-        l3->next = getnode(sum % 10);
+        sum = l1->val + l2->val + flag; //得出每一位的求和结果
+        l3->next = getnode(sum % 10);   //将求和结果对10取余后放置到这一位中
         if (flag)
-            flag--;
+            flag--;     //进位标志使用过后清零重置           
         if (sum >= 10)
-            flag++;
+            flag++;     //前面的求和结果大于等于10需要进位，flag置为1
         l1 = l1->next;
         l2 = l2->next;
-        l3 = l3->next;
+        l3 = l3->next;  //指针后移
     }
-    if (l2)
-        l1 = l2;
+    if (l2)             //应对两个数字长度不同的情况
+        l1 = l2;        //此时l2非空，说明l2长度大于l1，将剩余部分统一到l1里
     while (l1)
-    {
+    {//处理长数剩下的部分
         sum = l1->val+flag;
         if(flag)
             flag--;
@@ -51,11 +55,11 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
         l1 = l1->next;
         l3 = l3->next;
     }
-    if (flag)
+    if (flag)       //最终的进位不要忘
     {
         l3->next = getnode(1);
     }
-    flag = 0;
+    flag = 0;       //力扣会考虑函数多次使用的情况，我这里flag是全局变量，函数最后需要重置
     return result->next;
 }
 
@@ -69,7 +73,31 @@ void ListView(struct ListNode* l)
     printf("\b \n");
 }
 
-void test_add(int* arr1, int* arr2, struct ListNode* l1, struct ListNode* l2)
+struct ListNode* test_add(int* arr, int len1)
 {
+    struct ListNode* l = getnode(*arr);
+    struct ListNode* tmp = l;
+    for (int i = 1; i < len1; i++)
+    {
+        l->next = getnode(*(arr + i));
+        l = l->next;
+    }
+    return tmp;
+}
+
+int main()
+{
+    int a1[] = {9,9,9};
+    int a2[] = {9,9,9,9,9,9};
+
+    struct ListNode* l1 = test_add(a1, 3);
+    struct ListNode* l2 = test_add(a2, 6);
     
+    ListView(l1);
+    ListView(l2);
+
+    struct ListNode* l3 = addTwoNumbers(l1, l2);
+    ListView(l3);
+
+    return 0;
 }
