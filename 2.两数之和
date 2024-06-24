@@ -1,0 +1,75 @@
+//C语言题解
+//应该是个基础题解，算法设计的有点拉跨
+
+int flag = 0;
+
+//Definition for singly-linked list.
+struct ListNode {
+    int val;
+    struct ListNode* next;
+};
+
+struct ListNode* getnode(int val)
+{
+    struct ListNode* tmp = (struct ListNode*)malloc(sizeof(struct ListNode));
+    if (!tmp)
+    {
+        puts("Error");
+        return NULL;
+    }
+    tmp->val = val;
+    tmp->next = NULL;
+    return tmp;
+}
+
+struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
+    int sum = 0;
+    struct ListNode* l3 = getnode(0);
+    struct ListNode* result = l3;
+    while (l1 && l2)
+    {
+        sum = l1->val + l2->val + flag;
+        l3->next = getnode(sum % 10);
+        if (flag)
+            flag--;
+        if (sum >= 10)
+            flag++;
+        l1 = l1->next;
+        l2 = l2->next;
+        l3 = l3->next;
+    }
+    if (l2)
+        l1 = l2;
+    while (l1)
+    {
+        sum = l1->val+flag;
+        if(flag)
+            flag--;
+        if (sum >= 10)
+            flag++;
+        l3->next = getnode(sum%10);
+        l1 = l1->next;
+        l3 = l3->next;
+    }
+    if (flag)
+    {
+        l3->next = getnode(1);
+    }
+    flag = 0;
+    return result->next;
+}
+
+void ListView(struct ListNode* l)
+{
+    while (l)
+    {
+        printf("%d-", l->val);
+        l = l->next;
+    }
+    printf("\b \n");
+}
+
+void test_add(int* arr1, int* arr2, struct ListNode* l1, struct ListNode* l2)
+{
+    
+}
