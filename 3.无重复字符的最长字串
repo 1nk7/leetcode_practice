@@ -1,0 +1,32 @@
+//还没学会哈希表，复杂度极高
+int IsSame(char* s, char c, int begin, int end)
+{
+	for (int i = begin; i <= end; i++)
+	{
+		if (c == *(s + i))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+int lengthOfLongestSubstring(char* s) {
+	char begin = '0';
+	int len = 1, max = 0, lenth = (int)strlen(s);
+	for (int i = 0; *(s + i); i++)
+	{
+		begin = *(s + i);
+		for (int j = i + 1; j < lenth && lenth - i > max; j++)
+		{
+			if (IsSame(s, *(s + j), i, j - 1))
+				break;
+			len++;
+		}
+		if (len > max)
+		{
+			max = len;
+		}
+		len = 1;
+	}
+	return max;
+}
